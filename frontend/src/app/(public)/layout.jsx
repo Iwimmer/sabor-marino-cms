@@ -17,10 +17,10 @@ export default async function PublicLayout({ children }) {
       <SiteHeader settings={settings} items={menus.header ?? []} />
       <main id="contenido">{children}</main>
       <SiteFooter settings={settings} items={menus.footer ?? []} socialLinks={socialLinks} />
-      {/* Botón flotante de WhatsApp solo en celular, donde reservar es más común */}
+      {/* Botón flotante de WhatsApp solo en celular; aparece al bajar para no tapar la portada */}
       {wa && (
         <a href={wa} target="_blank" rel="noreferrer" aria-label="Reservar por WhatsApp"
-          className="fixed right-4 bottom-4 z-30 flex size-14 items-center justify-center rounded-full bg-accent text-on-accent shadow-lg md:hidden">
+          className="fab-on-scroll fixed right-4 bottom-4 z-30 flex size-14 items-center justify-center rounded-full bg-accent text-on-accent shadow-lg ring-4 ring-surface/60 md:hidden">
           <MessageCircle className="size-6" />
         </a>
       )}

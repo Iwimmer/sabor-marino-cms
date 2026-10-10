@@ -1,7 +1,7 @@
 // Cualquier otra página creada en el panel: /carta, /nosotros, /promociones...
 // El "slug" de la URL se busca en la base de datos; si no existe o está en borrador -> 404.
 import { notFound } from 'next/navigation';
-import { apiGet } from '@/lib/server-api';
+import { apiGet, getSite } from '@/lib/server-api';
 import BlockRenderer from '@/components/site/BlockRenderer';
 
 export async function generateMetadata({ params }) {
@@ -12,7 +12,7 @@ export async function generateMetadata({ params }) {
 
 export default async function DynamicPage({ params }) {
   const { slug } = await params;
-  const page = await apiGet(`/public/pages/${encodeURIComponent(slug)}`);
+  const [page, site] = await Promise.all([apiGet(`/public/pages/${encodeURIComponent(slug)}`), getSite()]);
   if (!page) notFound();
 
   // Si el primer bloque ya tiene título (se mostrará como <h1>), no hace falta la franja con el nombre de la página
@@ -27,7 +27,7 @@ export default async function DynamicPage({ params }) {
           </div>
         </div>
       )}
-      <BlockRenderer blocks={page.blocks} />
+      <BlockRenderer blocks={page.blocks} site={site} />
       {!page.blocks.length && <p className="mx-auto max-w-6xl px-4 py-24 text-center text-ink/60">Esta página aún no tiene contenido.</p>}
     </>
   );

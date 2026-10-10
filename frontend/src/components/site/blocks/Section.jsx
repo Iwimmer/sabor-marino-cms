@@ -9,12 +9,14 @@ export default function Section({ children, className = '', tone = 'plain', id }
 }
 
 // El primer bloque de una página usa <h1> (título principal); los demás, <h2>.
+// La barrita de color de acento sobre el título da un toque moderno y une todas las secciones.
 export const Heading = ({ title, subtitle, center = false, isFirst = false }) => {
   const Tag = isFirst ? 'h1' : 'h2';
   return (
-  <div className={`mb-10 max-w-2xl sm:mb-14 ${center ? 'mx-auto text-center' : ''}`}>
-    <Tag className="font-display text-3xl leading-tight font-semibold text-primary sm:text-5xl">{title}</Tag>
-    {subtitle && <p className="mt-3 text-lg text-ink/70">{subtitle}</p>}
-  </div>
+    <div className={`reveal mb-10 max-w-2xl sm:mb-14 ${center ? 'mx-auto text-center' : ''}`}>
+      <span aria-hidden className={`mb-4 block h-1 w-12 rounded-full bg-accent ${center ? 'mx-auto' : ''}`} />
+      <Tag className="font-display text-3xl leading-tight font-semibold text-balance text-primary sm:text-5xl">{title}</Tag>
+      {subtitle && <p className="mt-3 text-lg text-pretty text-ink/70">{subtitle}</p>}
+    </div>
   );
 };

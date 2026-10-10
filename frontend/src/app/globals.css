@@ -45,3 +45,68 @@ body {
     @apply animate-pulse rounded-lg bg-slate-200/80;
   }
 }
+
+/* Los enlaces a #ceviches, #bebidas... no quedan tapados por la cabecera fija */
+[id] {
+  scroll-margin-top: 7rem;
+}
+
+/*
+  ANIMACIONES AL HACER SCROLL (sin JavaScript)
+  "animation-timeline: view()" enlaza la animación con la posición del elemento en la pantalla:
+  avanza mientras el elemento entra en la vista. Es CSS moderno (Scroll-driven Animations).
+  - @supports: los navegadores que aún no lo soportan simplemente muestran todo quieto.
+  - prefers-reduced-motion: si la persona pidió "reducir movimiento" en su sistema, no se anima nada.
+*/
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 2rem;
+  }
+}
+@keyframes header-elevate {
+  to {
+    background-color: color-mix(in oklab, var(--brand-background) 82%, transparent);
+    box-shadow: 0 10px 30px -15px rgb(15 23 42 / 0.35);
+  }
+}
+@keyframes fab-in {
+  from {
+    opacity: 0;
+    scale: 0.6;
+    visibility: hidden; /* oculto de verdad (no se puede tocar) mientras no aparece */
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  /* Entrada de la portada al cargar la página */
+  .fade-up {
+    animation: reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .delay-1 { animation-delay: 0.12s; }
+  .delay-2 { animation-delay: 0.24s; }
+  .delay-3 { animation-delay: 0.36s; }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+    /* La cabecera gana sombra y fondo de vidrio en los primeros 120px de scroll */
+    .header-elevate {
+      animation: header-elevate linear both;
+      animation-timeline: scroll();
+      animation-range: 0 120px;
+    }
+    /* El botón flotante de WhatsApp aparece recién al bajar, así no tapa la portada */
+    .fab-on-scroll {
+      animation: fab-in linear both;
+      animation-timeline: scroll();
+      animation-range: 0 300px;
+    }
+  }
+}

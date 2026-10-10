@@ -141,13 +141,17 @@ export function seed(db) {
   // Nosotros
   insertBlock.run(nosotrosId, 'text', 1, json({
     title: 'Una historia que empezó en el muelle',
-    body: 'Sabor Marino nació en 1998 como un pequeño puesto frente al muelle de Chorrillos. Hoy seguimos con la misma regla: si el pescado no llegó fresco esa mañana, no sale a la mesa.',
+    body: 'Sabor Marino nació en 1998 como un pequeño puesto frente al muelle de Chorrillos. Hoy seguimos con la misma regla: si el pescado no llegó fresco esa mañana, no sale a la mesa.\nCada día compramos en el terminal de Villa María del Triunfo, cortamos al momento y marinamos con limón de Chulucanas. Nuestra cocina es la de casa: recetas de la familia que se han ido afinando con los años y con lo que nos piden nuestros clientes.',
     imageId: null,
     imagePosition: 'right',
   }));
   insertBlock.run(nosotrosId, 'testimonials', 2, json({
     title: 'Clientes de siempre',
-    items: [{ name: 'Don Carlos', text: 'Vengo desde que era un puestito. El sabor no ha cambiado.', rating: 5 }],
+    items: [
+      { name: 'Don Carlos', text: 'Vengo desde que era un puestito. El sabor no ha cambiado.', rating: 5 },
+      { name: 'Rosa T.', text: 'Celebramos aquí todos los cumpleaños de la familia. Siempre nos atienden como en casa.', rating: 5 },
+      { name: 'Miguel A.', text: 'La jalea es crocante de verdad y la porción alcanza para compartir.', rating: 5 },
+    ],
   }));
 
   // Contacto

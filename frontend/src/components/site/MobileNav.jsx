@@ -24,7 +24,7 @@ export default function MobileNav({ items, reserve }) {
         {open ? <X className="size-6" /> : <Menu className="size-6" />}
       </button>
       {open && (
-        <nav id="menu-movil" aria-label="Principal" className="absolute inset-x-0 top-full border-b border-ink/10 bg-surface px-4 pt-2 pb-5 shadow-lg">
+        <nav id="menu-movil" aria-label="Principal" className="fade-up absolute inset-x-0 top-full border-b border-ink/10 bg-surface/95 px-4 pt-2 pb-5 shadow-lg backdrop-blur-xl">
           {items.map((i) => [link(i), ...i.children.map((c) => link(c, true))])}
           {reserve && <a href={reserve} target="_blank" rel="noreferrer" className="mt-3 block rounded-full bg-accent px-5 py-3 text-center font-semibold text-on-accent">Reservar por WhatsApp</a>}
         </nav>
