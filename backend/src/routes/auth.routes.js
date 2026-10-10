@@ -11,6 +11,7 @@ const router = Router();
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 10,
+  skipSuccessfulRequests: true, // solo cuentan los intentos fallidos (en la nube todos llegan desde la IP de Vercel)
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   message: { error: { message: 'Demasiados intentos. Espera 15 minutos.' } },
