@@ -29,7 +29,8 @@ if (total === 0) {
   console.log('🌱 Datos de demostración cargados');
   const { seedImages } = await import('./seed-images/seedImages.js');
   const img = await seedImages(db);
-  console.log(`🖼️  ${img.total} imágenes procesadas con sharp (${img.photos} fotos reales, ${img.total - img.photos} ilustraciones); ${img.dishes} platos con foto`);
+  const ilus = img.total - img.photos;
+  console.log(`🖼️  ${img.total} imágenes procesadas con sharp (${img.photos} fotos reales, ${ilus} ${ilus === 1 ? 'ilustración' : 'ilustraciones'}); ${img.dishes} platos con foto`);
   console.log('   Admin:  admin@sabormarino.pe  / Admin123*');
   console.log('   Editor: editor@sabormarino.pe / Editor123*');
 } else {
