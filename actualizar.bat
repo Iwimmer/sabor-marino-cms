@@ -10,8 +10,10 @@ echo  (git pull o un ZIP nuevo). Vuelve a compilar la web y actualiza la base de
 echo.
 
 echo  [1/5] Deteniendo el sistema si esta abierto...
-taskkill /FI "WINDOWTITLE eq API Sabor Marino*" /T /F >nul 2>&1
-taskkill /FI "WINDOWTITLE eq Web Sabor Marino*" /T /F >nul 2>&1
+rem Se detiene el programa que use el puerto 4000 (API) o 3000 (web)
+for %%P in (4000 3000) do (
+  for /f "tokens=5" %%I in ('netstat -ano ^| findstr ":%%P " ^| findstr LISTENING') do taskkill /PID %%I /T /F >nul 2>&1
+)
 timeout /t 2 >nul
 
 echo.

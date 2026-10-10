@@ -8,15 +8,38 @@ import { env } from '../src/config/env.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-if (process.argv.includes('--reset')) {
-  for (const suffix of ['', '-wal', '-shm']) {
-    fs.rmSync(env.databasePath + suffix, { force: true });
+const reset = process.argv.includes('--reset');
+let lockedFile = false;
+
+if (reset) {
+  try {
+    for (const suffix of ['', '-wal', '-shm']) fs.rmSync(env.databasePath + suffix, { force: true });
+    console.log('🗑️  Base de datos anterior eliminada');
+  } catch (err) {
+    // En Windows no se puede borrar un archivo que otro programa tiene abierto
+    // (la API encendida, un visor de SQLite...). En ese caso se vacían las tablas por dentro.
+    if (!['EPERM', 'EBUSY'].includes(err.code)) throw err;
+    lockedFile = true;
   }
-  console.log('🗑️  Base de datos anterior eliminada');
+  // Imágenes procesadas de la instalación anterior (ya no las usa nadie)
+  const uploads = env.uploadsDir;
+  if (fs.existsSync(uploads)) {
+    for (const f of fs.readdirSync(uploads)) {
+      if (f !== '.gitkeep') fs.rmSync(path.join(uploads, f), { force: true, recursive: true });
+    }
+  }
 }
 
 // Se importa DESPUÉS de borrar para que abra un archivo nuevo
 const { db, transaction } = await import('../src/lib/db.js');
+
+if (lockedFile) {
+  db.exec('PRAGMA foreign_keys = OFF');
+  const tables = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'").all();
+  for (const { name } of tables) db.exec(`DROP TABLE IF EXISTS "${name}"`);
+  db.exec('PRAGMA foreign_keys = ON');
+  console.log('🗑️  Base de datos vaciada (el archivo estaba en uso, se borraron sus tablas)');
+}
 const { seed } = await import('./seed.js');
 
 const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
