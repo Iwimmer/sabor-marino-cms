@@ -1,0 +1,35 @@
+{
+  "name": "sabor-marino-api",
+  "version": "1.0.0",
+  "description": "API REST del CMS Sabor Marino (Node.js + Express + SQLite nativo)",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --disable-warning=ExperimentalWarning --watch src/server.js",
+    "start": "node --disable-warning=ExperimentalWarning src/server.js",
+    "db:setup": "node --disable-warning=ExperimentalWarning database/setup.js",
+    "db:reset": "node --disable-warning=ExperimentalWarning database/setup.js --reset",
+    "test": "node --disable-warning=ExperimentalWarning --test",
+    "setup:env": "node scripts/create-env.js",
+    "db:photos": "node --disable-warning=ExperimentalWarning database/seed-images/replacePhotos.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "author": "Wimmer Román Quispe",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.7",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.12.1",
+    "multer": "^2.4.0",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.5"
+  }
+}

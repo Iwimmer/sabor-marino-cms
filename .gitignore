@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno (NUNCA subir credenciales)
+.env
+.env.local
+
+# Base de datos local (se genera con npm run db:setup)
+backend/database/*.db
+backend/database/*.db-wal
+backend/database/*.db-shm
+
+# Imágenes subidas por el usuario
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Next.js
+frontend/.next/
+frontend/out/
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "usernamehw.errorlens",
+    "eamodio.gitlens",
+    "qwtel.sqlite-viewer",
+    "rangav.vscode-thunder-client",
+    "dsznajder.es7-react-js-snippets",
+    "mikestead.dotenv",
+    "formulahendry.auto-rename-tag"
+  ]
+}

@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/*
+  COLORES DINÁMICOS
+  Las variables --brand-* NO están escritas aquí: el layout raíz (src/app/layout.jsx)
+  las lee de la base de datos y las inyecta en <html style="--brand-primary: #0F4C75; ...">.
+  "@theme inline" conecta esas variables con Tailwind, así podemos usar clases como
+  bg-primary, text-primary, border-accent... y cambian solas cuando el admin cambia el color.
+*/
+@theme inline {
+  --color-primary: var(--brand-primary);
+  --color-secondary: var(--brand-secondary);
+  --color-accent: var(--brand-accent);
+  --color-surface: var(--brand-background);
+  --color-ink: var(--brand-text);
+  --color-on-primary: var(--brand-on-primary);
+  --color-on-accent: var(--brand-on-accent);
+  /* Tonos suaves calculados a partir del color de marca */
+  --color-primary-soft: color-mix(in oklab, var(--brand-primary) 10%, white);
+  --color-primary-muted: color-mix(in oklab, var(--brand-primary) 25%, white);
+  --color-accent-soft: color-mix(in oklab, var(--brand-accent) 14%, white);
+  --color-primary-dark: color-mix(in oklab, var(--brand-primary) 80%, black);
+
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces Variable", Georgia, serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  @apply antialiased;
+  /* Evita el scroll horizontal general en cualquier pantalla */
+  overflow-x: clip;
+}
+
+/* Foco visible y consistente para navegación con teclado */
+:focus-visible {
+  outline: 2px solid var(--brand-secondary);
+  outline-offset: 2px;
+}
+
+@layer components {
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-slate-200/80;
+  }
+}
