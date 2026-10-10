@@ -62,7 +62,11 @@ function HeroForm({ content, onChange, errors }) {
     <div className="grid gap-4 sm:grid-cols-2">
       <Field label="Título" required error={err('title')} className="sm:col-span-2">{({ id, invalid }) => <Input id={id} invalid={invalid} value={content.title} onChange={set('title')} />}</Field>
       <Field label="Subtítulo" error={err('subtitle')} className="sm:col-span-2">{({ id }) => <Textarea id={id} rows={2} value={content.subtitle} onChange={set('subtitle')} />}</Field>
-      <div className="sm:col-span-2"><ImageField label="Imagen de fondo" value={content.imageId} onChange={set('imageId')} /></div>
+      <div className="sm:col-span-2"><ImageField label="Imagen principal" value={content.imageId} onChange={set('imageId')} /></div>
+      <div className="sm:col-span-2">
+        <ImageListField label="Carrusel: imágenes extra que se alternan con la principal" ids={content.slideIds ?? []} max={5} onChange={set('slideIds')} />
+        {err('slideIds') && <p className="mt-1 text-sm text-red-600">{err('slideIds')}</p>}
+      </div>
       <Field label="Texto del botón" hint="Déjalo vacío para no mostrar botón" error={err('buttonText')}>{({ id }) => <Input id={id} value={content.buttonText} onChange={set('buttonText')} />}</Field>
       <Field label="Enlace del botón" hint="/carta o https://..." error={err('buttonLink')}>{({ id, invalid }) => <Input id={id} invalid={invalid} value={content.buttonLink} onChange={set('buttonLink')} />}</Field>
     </div>
@@ -92,32 +96,42 @@ function MenuForm({ content, onChange, errors }) {
   );
 }
 
-function GalleryForm({ content, onChange, errors }) {
-  const { set, err } = useEditor(content, onChange, errors);
+// Lista de imágenes elegidas de la biblioteca (miniaturas + botón "Elegir").
+// La usan la Galería y el carrusel de la Portada.
+function ImageListField({ label, ids, max, onChange }) {
   const [open, setOpen] = useState(false);
   const { data: media } = useApi('/media');
   const byId = new Map((media ?? []).map((m) => [m.id, m]));
   return (
-    <div className="space-y-4">
-      <Field label="Título" error={err('title')}>{({ id }) => <Input id={id} value={content.title} onChange={set('title')} />}</Field>
-      <div>
-        <p className="mb-1.5 text-sm font-medium text-slate-700">Imágenes ({content.imageIds.length}/24)</p>
-        <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5">
-          {content.imageIds.map((id) => (
-            <li key={id} className="relative aspect-square overflow-hidden rounded-lg bg-slate-100">
-              {byId.get(id) && <img src={thumbOf(byId.get(id))} alt={byId.get(id).alt} className="size-full object-cover" />}
-              <button type="button" onClick={() => onChange({ ...content, imageIds: content.imageIds.filter((x) => x !== id) })} aria-label="Quitar"
-                className="absolute top-1 right-1 rounded-full bg-white/90 p-1 text-slate-600 shadow hover:text-red-600"><X className="size-3.5" /></button>
-            </li>
-          ))}
+    <div>
+      <p className="mb-1.5 text-sm font-medium text-slate-700">{label} ({ids.length}/{max})</p>
+      <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+        {ids.map((id) => (
+          <li key={id} className="relative aspect-square overflow-hidden rounded-lg bg-slate-100">
+            {byId.get(id) && <img src={thumbOf(byId.get(id))} alt={byId.get(id).alt} className="size-full object-cover" />}
+            <button type="button" onClick={() => onChange(ids.filter((x) => x !== id))} aria-label="Quitar"
+              className="absolute top-1 right-1 rounded-full bg-white/90 p-1 text-slate-600 shadow hover:text-red-600"><X className="size-3.5" /></button>
+          </li>
+        ))}
+        {ids.length < max && (
           <li>
             <button type="button" onClick={() => setOpen(true)} className="flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-slate-300 text-xs text-slate-500 hover:border-primary hover:text-primary">
               <ImagePlus className="size-5" /> Elegir
             </button>
           </li>
-        </ul>
-      </div>
-      <MediaLibraryModal open={open} multiple initial={content.imageIds} onClose={() => setOpen(false)} onSelect={(ids) => onChange({ ...content, imageIds: ids })} />
+        )}
+      </ul>
+      <MediaLibraryModal open={open} multiple initial={ids} onClose={() => setOpen(false)} onSelect={(sel) => onChange(sel.slice(0, max))} />
+    </div>
+  );
+}
+
+function GalleryForm({ content, onChange, errors }) {
+  const { set, err } = useEditor(content, onChange, errors);
+  return (
+    <div className="space-y-4">
+      <Field label="Título" error={err('title')}>{({ id }) => <Input id={id} value={content.title} onChange={set('title')} />}</Field>
+      <ImageListField label="Imágenes" ids={content.imageIds} max={24} onChange={set('imageIds')} />
     </div>
   );
 }

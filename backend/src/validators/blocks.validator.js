@@ -14,6 +14,8 @@ export const BLOCK_SCHEMAS = {
     title: text(120).min(1, 'El título es obligatorio'),
     subtitle: optionalText(300),
     imageId: mediaId,
+    // Carrusel: imágenes extra que se alternan con la principal (opcional, máx. 5)
+    slideIds: z.array(z.number().int().positive()).max(5, 'Máximo 5 imágenes extra en el carrusel').default([]),
     buttonText: optionalText(40),
     buttonLink: link.optional().default(''),
   }),
@@ -62,7 +64,7 @@ export const BLOCK_TYPES = Object.keys(BLOCK_SCHEMAS);
 // Catálogo para el panel: nombre amigable, descripción y contenido inicial de cada bloque
 export const BLOCK_CATALOG = [
   { type: 'hero', label: 'Portada (Hero)', description: 'Imagen grande con título, subtítulo y botón',
-    defaults: { title: 'Título principal', subtitle: '', imageId: null, buttonText: 'Ver más', buttonLink: '/carta' } },
+    defaults: { title: 'Título principal', subtitle: '', imageId: null, slideIds: [], buttonText: 'Ver más', buttonLink: '/carta' } },
   { type: 'menu', label: 'Carta', description: 'Platos de la carta, por categorías o solo destacados',
     defaults: { title: 'Nuestra carta', subtitle: '', categoryIds: [], onlyFeatured: false } },
   { type: 'gallery', label: 'Galería', description: 'Cuadrícula de fotos',

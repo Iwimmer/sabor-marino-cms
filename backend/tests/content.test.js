@@ -324,6 +324,21 @@ describe('Medios: subida y procesamiento con sharp', () => {
     assert.ok(menuBlock.data.categories.every((c) => c.dishes.every((d) => d.isFeatured)));
   });
 
+  test('El carrusel de la portada: máximo 5 extra y la API devuelve las diapositivas', async () => {
+    const pages = (await editor('GET', '/pages')).body.data;
+    const home = (await editor('GET', `/pages/${pages.find((p) => p.isHome).id}`)).body.data;
+    const hero = home.components.find((c) => c.type === 'hero');
+    const base = { title: 'El mar llega fresco a tu mesa', imageId: mediaId };
+
+    const tooMany = await editor('PUT', `/components/${hero.id}`, { content: { ...base, slideIds: [1, 2, 3, 4, 5, 6] } });
+    assert.equal(tooMany.status, 400);
+    assert.ok(tooMany.body.error.details.some((d) => d.field === 'content.slideIds'));
+
+    await editor('PUT', `/components/${hero.id}`, { content: { ...base, slideIds: [mediaId, 9999] } });
+    const block = (await anon('GET', '/public/home')).body.data.blocks.find((b) => b.type === 'hero');
+    assert.equal(block.data.slides.length, 2); // principal + 1 extra (9999 no existe y se ignora)
+  });
+
   test('Eliminar la imagen borra los archivos y deja el plato sin foto', async () => {
     const before = (await editor('GET', `/media/${mediaId}`)).body.data.variants;
     assert.equal((await editor('DELETE', `/media/${mediaId}`)).status, 204);

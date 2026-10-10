@@ -22,12 +22,14 @@ export function site() {
  * Ej.: un bloque "gallery" solo guarda imageIds: [3, 5]; aquí se convierten en URLs.
  */
 function resolveBlocks(components) {
-  const imageIds = components.flatMap((c) => [c.content.imageId, ...(c.content.imageIds ?? [])]);
+  const imageIds = components.flatMap((c) => [c.content.imageId, ...(c.content.imageIds ?? []), ...(c.content.slideIds ?? [])]);
   const images = mediaService.resolveMany(imageIds);
 
   return components.map((c) => {
     const data = {};
     if ('imageId' in c.content) data.image = images.get(c.content.imageId) ?? null;
+    // Portada: la imagen principal + las del carrusel, en orden y sin las que se hayan borrado
+    if (c.type === 'hero') data.slides = [c.content.imageId, ...(c.content.slideIds ?? [])].map((id) => images.get(id)).filter(Boolean);
     if (c.type === 'gallery') data.images = c.content.imageIds.map((id) => images.get(id)).filter(Boolean);
     if (c.type === 'menu') data.categories = cartaService.publicMenu(c.content);
     if (c.type === 'contact') data.contact = settingsService.get().contact;

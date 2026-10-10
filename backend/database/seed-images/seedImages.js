@@ -43,7 +43,12 @@ export async function seedImages(db) {
   db.prepare('UPDATE site_settings SET logo_id = ? WHERE id = 1').run(ids.logo);
   const setContent = db.prepare("UPDATE page_components SET content = json_set(content, ?, json(?)) WHERE id = ?");
   for (const c of db.prepare('SELECT id, type, page_id FROM page_components').all()) {
-    if (c.type === 'hero') setContent.run('$.imageId', String(ids.hero), c.id);
+    if (c.type === 'hero') {
+      setContent.run('$.imageId', String(ids.hero), c.id);
+      // Carrusel de la portada: después de la foto principal se alternan tres platos estrella
+      const slides = ['ceviche-clasico', 'arroz-con-mariscos', 'causa-de-langostinos'];
+      setContent.run('$.slideIds', JSON.stringify(slides.map((k) => ids[k])), c.id);
+    }
     if (c.type === 'text') setContent.run('$.imageId', String(ids.local), c.id);
     if (c.type === 'gallery') {
       const gallery = ['local', 'ceviche-mixto', 'arroz-con-mariscos', 'causa-de-langostinos', 'tiradito-al-aji-amarillo', 'picarones'];

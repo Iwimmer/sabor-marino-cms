@@ -1,15 +1,17 @@
 // PORTADA. El elemento distintivo del sitio: la foto dentro de un "ojo de buey"
 // (la ventana redonda de los barcos), con un anillo del color principal.
-// Detalles modernos: manchas de color difuminadas al fondo, entrada animada (fade-up)
-// y el anillo punteado girando muy lento (se detiene si el usuario pidió "reducir movimiento").
+// Detalles modernos: manchas de color difuminadas al fondo, entrada animada (fade-up),
+// el anillo punteado girando muy lento y un carrusel de fotos dentro del círculo.
+// Todo se detiene si el usuario pidió "reducir movimiento" en su sistema.
 import { MessageCircle, Sparkles } from 'lucide-react';
-import ResponsiveImage from '../ResponsiveImage';
+import HeroCarousel from '../HeroCarousel';
 import { whatsappLink } from '../whatsapp';
 
 export default function HeroBlock({ content, data, site }) {
   const external = /^https?:/.test(content.buttonLink);
   const slogan = site?.settings?.slogan;
   const wa = whatsappLink(site?.settings?.contact?.whatsapp);
+  const slides = data.slides ?? (data.image ? [data.image] : []);
 
   return (
     <section className="relative isolate overflow-hidden bg-surface">
@@ -46,11 +48,12 @@ export default function HeroBlock({ content, data, site }) {
           </div>
         </div>
 
-        {data.image && (
-          <div className="fade-up order-1 flex justify-center md:order-2 md:justify-end">
+        {slides.length > 0 && (
+          <div className="fade-up order-1 flex justify-center pb-10 md:order-2 md:justify-end md:pb-0">
             <div className="relative aspect-square w-[min(78vw,30rem)] rounded-full border-[10px] border-primary p-2 shadow-2xl shadow-primary/30 sm:border-[14px] sm:p-3">
               <div className="absolute -inset-4 animate-[spin_60s_linear_infinite] rounded-full border-2 border-dashed border-secondary/50 motion-reduce:animate-none sm:-inset-6" aria-hidden />
-              <ResponsiveImage image={data.image} priority sizes="(min-width: 768px) 480px, 78vw" className="size-full rounded-full object-cover" />
+              {/* Con 1 sola foto se ve fija; con 2 o más, se alternan (carrusel) */}
+              <HeroCarousel slides={slides} />
             </div>
           </div>
         )}

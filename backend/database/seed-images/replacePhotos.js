@@ -40,14 +40,17 @@ for (const file of files) {
   transaction(() => {
     db.prepare('UPDATE site_settings SET logo_id = ? WHERE logo_id = ?').run(media.id, old.id);
     db.prepare('UPDATE dishes SET image_id = ? WHERE image_id = ?').run(media.id, old.id);
-    // Bloques: imageId y listas imageIds dentro del JSON
+    // Bloques: imageId y listas de imágenes dentro del JSON
     for (const c of db.prepare('SELECT id, content FROM page_components').all()) {
       const content = JSON.parse(c.content);
       let changed = false;
       if (content.imageId === old.id) { content.imageId = media.id; changed = true; }
-      if (Array.isArray(content.imageIds) && content.imageIds.includes(old.id)) {
-        content.imageIds = content.imageIds.map((x) => (x === old.id ? media.id : x));
-        changed = true;
+      // Listas de imágenes: galería (imageIds) y carrusel de la portada (slideIds)
+      for (const key of ['imageIds', 'slideIds']) {
+        if (Array.isArray(content[key]) && content[key].includes(old.id)) {
+          content[key] = content[key].map((x) => (x === old.id ? media.id : x));
+          changed = true;
+        }
       }
       if (changed) db.prepare('UPDATE page_components SET content = ? WHERE id = ?').run(JSON.stringify(content), c.id);
     }

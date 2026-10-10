@@ -1,8 +1,7 @@
 // Pie de página público: contacto, menú del pie y redes (todo desde la BD).
 import Link from 'next/link';
 import { NavLink } from './SiteHeader';
-
-const SOCIAL_NAMES = { facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube', x: 'X', whatsapp: 'WhatsApp', otro: 'Web' };
+import SocialIcons from './SocialIcons';
 
 export default function SiteFooter({ settings, items, socialLinks }) {
   const { contact } = settings;
@@ -24,9 +23,7 @@ export default function SiteFooter({ settings, items, socialLinks }) {
         {socialLinks.length > 0 && (
           <div>
             <p className="mb-3 font-display text-lg">Síguenos</p>
-            <ul className="space-y-2">
-              {socialLinks.map((s) => <li key={s.id}><a href={s.url} target="_blank" rel="noreferrer" className="opacity-80 hover:opacity-100 hover:underline">{SOCIAL_NAMES[s.platform] ?? s.platform}</a></li>)}
-            </ul>
+            <SocialIcons links={socialLinks} className="gap-2" itemClassName="size-11 bg-on-primary/10 hover:bg-on-primary/20" />
           </div>
         )}
       </div>

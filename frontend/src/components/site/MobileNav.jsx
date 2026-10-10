@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
+import SocialIcons from './SocialIcons';
 
-export default function MobileNav({ items, reserve }) {
+export default function MobileNav({ items, reserve, socialLinks = [] }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   useEffect(() => setOpen(false), [pathname]);
@@ -24,9 +25,10 @@ export default function MobileNav({ items, reserve }) {
         {open ? <X className="size-6" /> : <Menu className="size-6" />}
       </button>
       {open && (
-        <nav id="menu-movil" aria-label="Principal" className="fade-up absolute inset-x-0 top-full border-b border-ink/10 bg-surface/95 px-4 pt-2 pb-5 shadow-lg backdrop-blur-xl">
+        <nav id="menu-movil" aria-label="Principal" className="fade-up absolute inset-x-0 top-full border-b border-ink/10 bg-surface px-4 pt-2 pb-5 shadow-lg">
           {items.map((i) => [link(i), ...i.children.map((c) => link(c, true))])}
           {reserve && <a href={reserve} target="_blank" rel="noreferrer" className="mt-3 block rounded-full bg-accent px-5 py-3 text-center font-semibold text-on-accent">Reservar por WhatsApp</a>}
+          <SocialIcons links={socialLinks} className="mt-4 justify-center gap-2" itemClassName="size-11 bg-primary-soft text-primary" />
         </nav>
       )}
     </div>

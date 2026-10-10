@@ -4,9 +4,10 @@
 import Link from 'next/link';
 import { CalendarCheck } from 'lucide-react';
 import MobileNav from './MobileNav';
+import SocialIcons from './SocialIcons';
 import { whatsappLink } from './whatsapp';
 
-export default function SiteHeader({ settings, items }) {
+export default function SiteHeader({ settings, items, socialLinks = [] }) {
   const reserve = whatsappLink(settings.contact.whatsapp);
   return (
     <header className="header-elevate sticky top-0 z-40 border-b border-ink/5 bg-surface/90 backdrop-blur-xl backdrop-saturate-150">
@@ -28,6 +29,8 @@ export default function SiteHeader({ settings, items }) {
               )}
             </div>
           ))}
+          {/* Redes sociales: solo en pantallas grandes (lg) para no amontonar la cabecera */}
+          <SocialIcons links={socialLinks} className="ml-2 hidden gap-1 border-l border-ink/10 pl-3 lg:flex" itemClassName="size-9 text-ink/60 hover:bg-primary-soft hover:text-primary" />
           {reserve && (
             <a href={reserve} target="_blank" rel="noreferrer" className="ml-3 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:brightness-95 motion-reduce:transition-none">
               <CalendarCheck className="size-4" aria-hidden /> Reservar
@@ -35,7 +38,7 @@ export default function SiteHeader({ settings, items }) {
           )}
         </nav>
 
-        <MobileNav items={items} reserve={reserve} />
+        <MobileNav items={items} reserve={reserve} socialLinks={socialLinks} />
       </div>
     </header>
   );

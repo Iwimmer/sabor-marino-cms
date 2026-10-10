@@ -14,7 +14,7 @@ export default async function PublicLayout({ children }) {
       <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary">
         Saltar al contenido
       </a>
-      <SiteHeader settings={settings} items={menus.header ?? []} />
+      <SiteHeader settings={settings} items={menus.header ?? []} socialLinks={socialLinks} />
       <main id="contenido">{children}</main>
       <SiteFooter settings={settings} items={menus.footer ?? []} socialLinks={socialLinks} />
       {/* Botón flotante de WhatsApp solo en celular; aparece al bajar para no tapar la portada */}
