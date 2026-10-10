@@ -5,6 +5,19 @@ Sistema Web Autónomo (Full-CMS) para el restaurante **Sabor Marino**: un sitio 
 > Proyecto final · Curso **Desarrollo de Aplicaciones Web** · SENATI
 > Estudiante: **Wimmer Román Quispe** · Instructor: **David Arturo Malpartida Calixto**
 
+## 🌍 Demo en vivo
+
+| | Enlace |
+|---|---|
+| 🍽️ Web pública | **https://sabor-marino.vercel.app** |
+| 🔐 Panel de administración | https://sabor-marino.vercel.app/admin |
+| ⚙️ API REST (Render) | https://sabor-marino-api.onrender.com/api/health |
+| 💻 Código | https://github.com/Iwimmer/sabor-marino-cms |
+
+Usuarios de prueba: **admin@sabormarino.pe / Admin123\*** (ADMIN) · **editor@sabormarino.pe / Editor123\*** (EDITOR)
+
+> ⏱️ La API usa el plan gratuito de Render: si nadie la visitó en 15 minutos, **la primera carga tarda ~50 segundos** mientras despierta. Los cambios hechos en el panel se reinician a los datos de demostración cuando el servicio se reinicia. Para una copia propia y permanente, usa el instalador (abajo).
+
 ---
 
 ## 📦 Estado del proyecto
@@ -15,6 +28,7 @@ Sistema Web Autónomo (Full-CMS) para el restaurante **Sabor Marino**: un sitio 
 | 2 | Motor: CRUD de páginas, bloques, carta, menús, colores e imágenes | ✅ Completo |
 | 3 | Panel de administración responsive | ✅ Completo |
 | 4 | Web pública, colores dinámicos, instalador final y QA | ✅ Completo |
+| 5 | Repositorio en GitHub y despliegue en producción (Vercel + Render) | ✅ Completo |
 
 ## 🧱 Tecnologías
 
@@ -183,6 +197,33 @@ El DER completo está en [`docs/der/DER_SaborMarino.pdf`](docs/der/DER_SaborMari
 | Pruebas E2E del panel (Playwright) | 16 / 16 |
 | Pruebas E2E de la web y administrabilidad (Playwright) | 15 / 15 |
 | Pantallas sin scroll horizontal (1440, 768 y 375 px) | 39 / 39 |
+
+## ☁️ Despliegue en producción
+
+```
+Navegador ──► Vercel (Next.js, carpeta frontend/) ──/api/* y /uploads/*──► Render (Express + SQLite, carpeta backend/)
+```
+
+El navegador solo habla con Vercel; los *rewrites* de `frontend/next.config.mjs` reenvían `/api` y `/uploads` a Render. Así la cookie de sesión es del mismo dominio y no hace falta CORS.
+
+**Render (Web Service, plan Free)**
+
+| Campo | Valor |
+|---|---|
+| Root Directory | `backend` |
+| Build Command | `npm install` |
+| Start Command | `npm run db:setup && npm start` |
+| Health Check Path | `/api/health` |
+| Variables | `NODE_VERSION=22`, `NODE_ENV=production`, `JWT_SECRET` (generado), `JWT_EXPIRES_IN=8h` |
+
+**Vercel (proyecto Next.js)**
+
+| Campo | Valor |
+|---|---|
+| Root Directory | `frontend` |
+| Variables | `API_URL=https://sabor-marino-api.onrender.com`, `SHOW_DEMO_USERS=true` |
+
+Ambos servicios tienen **despliegue continuo**: cada `git push` a `main` vuelve a desplegar automáticamente.
 
 ## 🧯 Problemas comunes
 
