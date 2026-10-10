@@ -55,7 +55,9 @@ No se necesita instalar ninguna base de datos.
 2. Doble clic en **`instalar.bat`**: instala dependencias, crea el `.env`, la base de datos con datos demo y compila la web (la primera vez tarda unos minutos).
 3. Doble clic en **`iniciar.bat`**: abre la API y la web, y luego el navegador con el sitio (**http://localhost:3000**) y el panel (**http://localhost:3000/admin**).
 
-> Las imágenes de demostración son ilustraciones propias generadas por código. Para usar fotos reales, colócalas en `backend/database/seed-images/photos/` (ver el `LEEME.md` de esa carpeta) y ejecuta `npm run db:reset` dentro de `backend/`.
+4. ¿Bajaste una versión nueva del código (`git pull` o un ZIP nuevo)? Doble clic en **`actualizar.bat`**: detiene el sistema, vuelve a compilar la web, actualiza la base de datos (te pregunta si quieres reiniciar los datos de demostración) y lo inicia otra vez.
+
+> Las fotos de los platos y del local están en `backend/database/seed-images/photos/` (generadas con IA). Si cambias o agregas una con el mismo nombre del plato, ejecuta **`actualizar-fotos.bat`** para aplicarla sin reinstalar.
 
 ## 🛠️ Instalación manual (cualquier sistema)
 
